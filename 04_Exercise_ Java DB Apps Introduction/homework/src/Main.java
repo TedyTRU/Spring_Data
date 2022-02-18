@@ -2,9 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.*;
-import java.util.LinkedHashSet;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 public class Main {
 
@@ -20,11 +18,125 @@ public class Main {
         int exNum = Integer.parseInt(reader.readLine());
 
         switch (exNum) {
-            case 2: exerciseTwo();
-            case 3: exerciseThree();
+            case 2 -> exerciseTwo();
+            case 3 -> exerciseThree();
+            case 4 -> exerciseFour();
+            case 5 -> exerciseFive();
+            case 6 -> exerciseSix();
+            case 7 -> exerciseSeven();
+            case 8 -> exerciseSeven();
+            case 9 -> exerciseNine();
         }
 
 
+
+    }
+
+    private static void exerciseSix() throws IOException, SQLException {
+        System.out.println("Enter villain id: ");
+        int villainId = Integer.parseInt(reader.readLine());
+
+        int affectedEntities = deleteMinionsByVillainId(villainId);
+
+        String villainName = findEntityNameById("villains", villainId);
+        deleteVillainById(villainId);
+
+        System.out.printf("%s was deleted%n%d minions released%n", villainName, affectedEntities);
+    }
+
+    private static void deleteVillainById(int villainId) throws SQLException {
+        PreparedStatement preparedStatement = connection
+                .prepareStatement("DELETE FROM villains WHERE id = ?");
+
+        preparedStatement.setInt(1, villainId);
+        preparedStatement.executeUpdate();
+    }
+
+    private static int deleteMinionsByVillainId(int villainId) throws SQLException {
+        PreparedStatement preparedStatement = connection
+                .prepareStatement("DELETE FROM minions_villains WHERE villain_id = ?");
+
+        preparedStatement.setInt(1, villainId);
+
+        return preparedStatement.executeUpdate();
+    }
+
+
+    private static void exerciseNine() throws IOException, SQLException {
+        System.out.println("Enter minion id: ");
+        int minion_id = Integer.parseInt(reader.readLine());
+
+        CallableStatement callableStatement = connection
+                .prepareCall("CALL usp_get_older (?)");
+        callableStatement.setInt(1, minion_id);
+
+        int affected = callableStatement.executeUpdate();
+
+        PreparedStatement preparedStatement = connection
+                .prepareStatement("SELECT name, age FROM minions " +
+                        "WHERE id = ?");
+        preparedStatement.setInt(1, minion_id);
+        ResultSet rs = preparedStatement.executeQuery();
+
+        while (rs.next()) {
+            System.out.printf("%s %d %n", rs.getString("name"), rs.getInt("age"));
+        }
+    }
+
+    private static void exerciseSeven() throws SQLException {
+        PreparedStatement preparedStatement = connection
+                .prepareStatement("SELECT name FROM minions");
+
+        ResultSet rs = preparedStatement.executeQuery();
+
+        List<String> allMinionsNames = new ArrayList<>();
+//        ArrayDeque<String> allMinionsNames = new ArrayDeque<>();
+
+        while (rs.next()) {
+            allMinionsNames.add(rs.getString("name"));
+        }
+
+        int start = 0;
+        int end = allMinionsNames.size() - 1;
+
+        for (int i = 0; i < allMinionsNames.size(); i++) {
+            System.out.println( i % 2 == 0
+                                ? allMinionsNames.get(start++)
+                                : allMinionsNames.get(end--));
+        }
+    }
+
+    private static void exerciseFive() throws IOException, SQLException {
+        System.out.println("Enter country name: ");
+        String countryName = reader.readLine();
+
+        PreparedStatement preparedStatement = connection
+                .prepareStatement("UPDATE towns " +
+                        "SET name = UPPER(name) " +
+                        "WHERE country = ?");
+        preparedStatement.setString(1, countryName);
+
+        int affectedRows = preparedStatement.executeUpdate();
+
+        if (affectedRows == 0) {
+            System.out.println("No town names were affected.");
+            return;
+        }
+
+        System.out.printf("%d town names were affected.%n", affectedRows);
+
+        PreparedStatement preparedStatementTowns = connection
+                .prepareStatement("SELECT name FROM towns " +
+                        "WHERE country = ?");
+        preparedStatementTowns.setString(1, countryName);
+        ResultSet towns = preparedStatementTowns.executeQuery();
+
+        while (towns.next()) {
+            System.out.println(towns.getString("name"));
+        }
+    }
+
+    private static void exerciseFour() {
 
     }
 
@@ -67,12 +179,15 @@ public class Main {
                 .prepareStatement(query);
         preparedStatement.setInt(1, entityId);
         ResultSet rs = preparedStatement.executeQuery();
-        rs.next();
+
+        if (!rs.next()) {
+            return String.format("No villain with ID %d exists in the database.", entityId);
+        }
 
         return rs.getString(1);
     }
 
-    private static String findVillainNameBId(int villainId) throws SQLException {
+    private static String findVillainNameById(int villainId) throws SQLException {
         PreparedStatement preparedStatement = connection
                 .prepareStatement("SELECT name FROM villains WHERE id = ?");
         preparedStatement.setInt(1, villainId);
