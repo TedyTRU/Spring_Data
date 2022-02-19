@@ -28,6 +28,7 @@ public class Main {
             case 9 -> exerciseNine();
         }
 
+
     }
 
     private static void exerciseNine() throws IOException, SQLException {
