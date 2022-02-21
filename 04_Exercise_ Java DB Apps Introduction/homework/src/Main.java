@@ -54,7 +54,7 @@ public class Main {
 
     private static void exerciseEight() throws IOException, SQLException {
         System.out.println("Enter minion IDs: ");
-        int [] minionIDs = Arrays.stream(reader.readLine().split("\\s+"))
+        int[] minionIDs = Arrays.stream(reader.readLine().split("\\s+"))
                 .mapToInt(Integer::parseInt).toArray();
 
         for (int minionID : minionIDs) {
@@ -83,21 +83,27 @@ public class Main {
 
         ResultSet rs = preparedStatement.executeQuery();
 
-        List<String> allMinionsNames = new ArrayList<>();
-//        ArrayDeque<String> allMinionsNames = new ArrayDeque<>();
+        // List<String> allMinionsNames = new ArrayList<>();
+        ArrayDeque<String> allMinionsNames = new ArrayDeque<>();
 
         while (rs.next()) {
-            allMinionsNames.add(rs.getString("name"));
+            // allMinionsNames.add(rs.getString("name"));
+            allMinionsNames.push(rs.getString("name"));
         }
 
-        int start = 0;
-        int end = allMinionsNames.size() - 1;
-
-        for (int i = 0; i < allMinionsNames.size(); i++) {
-            System.out.println( i % 2 == 0
-                                ? allMinionsNames.get(start++)
-                                : allMinionsNames.get(end--));
+        while (!allMinionsNames.isEmpty()) {
+            System.out.println(allMinionsNames.removeLast());
+            System.out.println(allMinionsNames.removeFirst());
         }
+
+//        int start = 0;
+//        int end = allMinionsNames.size() - 1;
+//
+//        for (int i = 0; i < allMinionsNames.size(); i++) {
+//            System.out.println(i % 2 == 0
+//                    ? allMinionsNames.get(start++)
+//                    : allMinionsNames.get(end--));
+//        }
     }
 
     private static void exerciseSix() throws IOException, SQLException {
@@ -235,7 +241,7 @@ public class Main {
         return villainId;
     }
 
-    private static int findEntityIdByName (String tableName, String entityName) throws SQLException {
+    private static int findEntityIdByName(String tableName, String entityName) throws SQLException {
         String query = String.format("SELECT id FROM %s WHERE name = ?", tableName);
         PreparedStatement preparedStatement = connection
                 .prepareStatement(query);
@@ -318,10 +324,10 @@ public class Main {
     private static void exerciseTwo() throws SQLException {
         PreparedStatement preparedStatement = connection
                 .prepareStatement("SELECT v.name, COUNT(DISTINCT mv.minion_id) AS 'count' FROM villains AS v " +
-                "JOIN minions_villains AS mv ON v.id = mv.villain_id " +
-                "GROUP BY mv.villain_id " +
-                "HAVING count > ? " +
-                "ORDER BY count DESC;");
+                        "JOIN minions_villains AS mv ON v.id = mv.villain_id " +
+                        "GROUP BY mv.villain_id " +
+                        "HAVING count > ? " +
+                        "ORDER BY count DESC;");
 
         preparedStatement.setInt(1, 15);
 
