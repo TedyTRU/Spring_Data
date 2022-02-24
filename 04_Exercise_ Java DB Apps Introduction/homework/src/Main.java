@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -57,14 +58,22 @@ public class Main {
         int[] minionIDs = Arrays.stream(reader.readLine().split("\\s+"))
                 .mapToInt(Integer::parseInt).toArray();
 
-        for (int minionID : minionIDs) {
-            PreparedStatement incrementMinionAge = connection
-                    .prepareStatement("UPDATE minions " +
-                            "SET age = age + 1, name = LOWER(name) " +
-                            "WHERE id = ?");
-            incrementMinionAge.setInt(1, minionID);
-            incrementMinionAge.executeUpdate();
-        }
+//        for (int minionID : minionIDs) {
+//            PreparedStatement incrementMinionAge = connection
+//                    .prepareStatement("UPDATE minions " +
+//                            "SET age = age + 1, name = LOWER(name) " +
+//                            "WHERE id = ?");
+//            incrementMinionAge.setInt(1, minionID);
+//            incrementMinionAge.executeUpdate();
+//        }
+
+        String query = String.format("UPDATE minions SET age = age + 1, name = LOWER(name) WHERE id IN (%s)",
+                Arrays.stream(minionIDs).mapToObj(i -> ((Integer) i).toString()).collect(Collectors.joining(", ")));
+
+        PreparedStatement incrementMinionAge = connection
+                .prepareStatement(query);
+        incrementMinionAge.executeUpdate();
+
 
         PreparedStatement preparedStatement = connection
                 .prepareStatement("SELECT name, age FROM minions");
