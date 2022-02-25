@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 public class Engine implements Runnable {
 
@@ -57,6 +58,7 @@ public class Engine implements Runnable {
 
     private void exercise12EmployeesMaximumSalaries() {
         // TO DO
+
     }
 
     private void exercise11FindEmployeesByFirstName() {
@@ -64,7 +66,17 @@ public class Engine implements Runnable {
     }
 
     private void exercise10IncreaseSalaries() {
+        entityManager.getTransaction().begin();
 
+        int affectedRows = entityManager.createQuery("UPDATE Employee e " +
+                        "SET e.salary = e.salary * 1.2 " +
+                        "WHERE e.department.id IN :ids")
+                .setParameter("ids", Set.of(1, 2, 4, 11))
+                .executeUpdate();
+
+        entityManager.getTransaction().commit();
+
+        System.out.println(affectedRows);
     }
 
     private void exercise9FindLatest10Projects() {
