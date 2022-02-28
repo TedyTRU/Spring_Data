@@ -1,5 +1,6 @@
 import com.google.protobuf.EmptyProto;
 import entities.Address;
+import entities.Department;
 import entities.Employee;
 import entities.Project;
 
@@ -12,7 +13,9 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Engine implements Runnable {
 
@@ -55,12 +58,41 @@ public class Engine implements Runnable {
         }
     }
 
-    private void exercise13RemoveTowns() {
-        // TO DO
+    private void exercise13RemoveTowns() throws IOException {
+        System.out.println("Enter town name: ");
+        String townName = bufferedReader.readLine();
+
     }
 
     private void exercise12EmployeesMaximumSalaries() {
-        // TO DO
+//        List<Employee> employees = entityManager
+//                .createQuery("SELECT e FROM Employee e " +
+//                        "WHERE e.salary NOT BETWEEN 30000 AND 70000", Employee.class)
+//                .getResultList();
+//
+//        Set<Department> departments = employees.stream()
+//                .map(Employee::getDepartment).collect(Collectors.toSet());
+//
+//        for (Department d : departments) {
+//            BigDecimal max = BigDecimal.valueOf(0);
+//
+//            for (Employee e : employees) {
+//                if (e.getDepartment().getId().equals(d.getId())) {
+//                    if (max.compareTo(e.getSalary()) < 1) {
+//                        max = e.getSalary();
+//                    }
+//                }
+//            }
+//            System.out.printf("%s %.2f%n", d.getName(), max);
+//        }
+
+        List<Object[]> rows = entityManager.createNativeQuery("SELECT d.name, MAX(e.salary) FROM employees AS e " +
+                        "JOIN departments d on d.department_id = e.department_id " +
+                        "GROUP BY e.department_id " +
+                        "HAVING MAX(e.salary) NOT BETWEEN 30000 AND 70000 ")
+                .getResultList();
+
+        rows.forEach(r -> System.out.printf("%s %.2f%n", r[0], r[1]));
 
     }
 
