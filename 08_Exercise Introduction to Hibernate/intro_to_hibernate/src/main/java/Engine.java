@@ -1,6 +1,7 @@
 import com.google.protobuf.EmptyProto;
 import entities.Address;
 import entities.Employee;
+import entities.Project;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -9,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -42,6 +44,7 @@ public class Engine implements Runnable {
                 case 11 -> exercise11FindEmployeesByFirstName();
                 case 12 -> exercise12EmployeesMaximumSalaries();
                 case 13 -> exercise13RemoveTowns();
+                default -> System.out.println("Invalid exercise number");
             }
 
         } catch (IOException e) {
@@ -62,7 +65,28 @@ public class Engine implements Runnable {
     }
 
     private void exercise11FindEmployeesByFirstName() {
-        // TO DO
+        entityManager.getTransaction().begin();
+
+        int affectedRows = entityManager.createQuery("UPDATE Employee e " +
+                        "SET e.salary = e.salary * 1.12 " +
+                        "WHERE e.department.id IN :ids")
+                .setParameter("ids", Set.of(1, 2, 4, 11))
+                .executeUpdate();
+
+        entityManager.getTransaction().commit();
+        System.out.println(affectedRows);
+
+        List<Employee> employees = entityManager.createQuery("SELECT e FROM Employee e " +
+                        "WHERE e.department.id IN :ids", Employee.class)
+                .setParameter("ids", Set.of(1, 2, 4, 11))
+                .getResultList();
+
+        employees
+                .forEach(e -> {
+                    System.out.printf("%s %s ($%.2f)%n",
+                            e.getFirstName(), e.getLastName(), e.getSalary());
+                });
+
     }
 
     private void exercise10IncreaseSalaries() {
@@ -80,12 +104,36 @@ public class Engine implements Runnable {
     }
 
     private void exercise9FindLatest10Projects() {
-        // TO DO
+
+        List<Project> projects = entityManager.createQuery("SELECT p FROM Project p " +
+                        "ORDER BY p.startDate DESC ", Project.class)
+                .setMaxResults(10)
+                .getResultList();
+
+        projects.stream()
+                .sorted(Comparator.comparing(Project::getName))
+                .forEach(p -> System.out.printf("Project name: %s%n\tProject Description: %s ...%n" +
+                                "\tProject Start Date: %s%n\tProject End Date: %s%n",
+                        p.getName(), p.getDescription().substring(0, 35), p.getStartDate(), p.getEndDate()));
     }
 
-    private void exercise8GetEmployeeWithProject() {
-        Employee employee = entityManager.find(Employee.class, 147);
-        // TO DO
+    private void exercise8GetEmployeeWithProject() throws IOException {
+        System.out.println("Enter employee id: ");
+        int employeeId = Integer.parseInt(bufferedReader.readLine());
+
+        try {
+            Employee employee = entityManager.find(Employee.class, employeeId);
+
+            System.out.printf("%s %s - %s%n",
+                    employee.getFirstName(), employee.getLastName(), employee.getJobTitle());
+
+            employee.getProjects().stream()
+                    .sorted(Comparator.comparing(Project::getName))
+                    .forEach(p -> System.out.println(p.getName()));
+
+        } catch (Exception e) {
+            System.out.println("Invalid employee id");
+        }
     }
 
     private void exercise7AddressesWithEmployeeCount() {
