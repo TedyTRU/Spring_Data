@@ -1,8 +1,5 @@
 import com.google.protobuf.EmptyProto;
-import entities.Address;
-import entities.Department;
-import entities.Employee;
-import entities.Project;
+import entities.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -62,6 +59,59 @@ public class Engine implements Runnable {
         System.out.println("Enter town name: ");
         String townName = bufferedReader.readLine();
 
+        try {
+            Town town = entityManager
+                    .createQuery("SELECT t FROM Town t " +
+                            "WHERE t.name = :t_name", Town.class)
+                    .setParameter("t_name", townName)
+                    .getSingleResult();
+
+            int affectedRows = removeAddressesByTownId(town.getId());
+
+            entityManager.getTransaction().begin();
+            entityManager.remove(town);
+            entityManager.getTransaction().commit();
+
+            System.out.printf("%d address in %s deleted%n", affectedRows, townName);
+
+        } catch (Exception e) {
+            System.out.printf("Town %s is not in the data base!", townName);
+        }
+
+    }
+
+    private int removeAddressesByTownId(Integer id) {
+//        entityManager.getTransaction().begin();
+//
+//        int result = entityManager
+//                .createQuery("DELETE FROM Address a " +
+//                        "WHERE a.town.id = :a_id")
+//                .setParameter("a_id", id)
+//                .executeUpdate();
+//
+//        entityManager.getTransaction().commit();
+//
+//        return result;
+
+
+        List<Address> addresses = entityManager
+                .createQuery("SELECT a FROM Address a " +
+                        "WHERE a.town.id = :t_id", Address.class)
+                .setParameter("t_id", id)
+                .getResultList();
+
+        for (Address address : addresses) {
+            for (Employee e : address.getEmployees()) {
+                e.setAddress(null);
+            }
+        }
+
+        entityManager.getTransaction().begin();
+        addresses.forEach(entityManager::remove);
+        entityManager.getTransaction().commit();
+
+        return addresses.size();
+
     }
 
     private void exercise12EmployeesMaximumSalaries() {
@@ -96,7 +146,27 @@ public class Engine implements Runnable {
 
     }
 
-    private void exercise11FindEmployeesByFirstName() {
+    private void exercise11FindEmployeesByFirstName() throws IOException {
+        System.out.println("Enter pattern: ");
+        String pattern = bufferedReader.readLine() + "%";
+
+        List<Employee> employees = entityManager
+                .createQuery("SELECT e FROM Employee e " +
+                        "WHERE e.firstName LIKE :p_name", Employee.class)
+                .setParameter("p_name", pattern)
+                .getResultList();
+
+        if (employees.size() == 0) {
+            System.out.println("No such employee exist in the Data Base");
+        }
+
+        employees
+                .forEach(e -> System.out.printf("%s %s - %s - ($%.2f)%n",
+                        e.getFirstName(), e.getLastName(), e.getJobTitle(), e.getSalary()));
+
+    }
+
+    private void exercise10IncreaseSalaries() {
         entityManager.getTransaction().begin();
 
         int affectedRows = entityManager.createQuery("UPDATE Employee e " +
@@ -118,21 +188,6 @@ public class Engine implements Runnable {
                     System.out.printf("%s %s ($%.2f)%n",
                             e.getFirstName(), e.getLastName(), e.getSalary());
                 });
-
-    }
-
-    private void exercise10IncreaseSalaries() {
-        entityManager.getTransaction().begin();
-
-        int affectedRows = entityManager.createQuery("UPDATE Employee e " +
-                        "SET e.salary = e.salary * 1.2 " +
-                        "WHERE e.department.id IN :ids")
-                .setParameter("ids", Set.of(1, 2, 4, 11))
-                .executeUpdate();
-
-        entityManager.getTransaction().commit();
-
-        System.out.println(affectedRows);
     }
 
     private void exercise9FindLatest10Projects() {
@@ -186,17 +241,26 @@ public class Engine implements Runnable {
         System.out.println("Enter employee last name: ");
         String lastName = bufferedReader.readLine();
 
-        Employee employee = entityManager
-                .createQuery("SELECT e FROM Employee e " +
-                        "WHERE e.lastName = :l_name", Employee.class)
-                .setParameter("l_name", lastName)
-                .getSingleResult();
+        try {
+            Employee employee = entityManager
+                    .createQuery("SELECT e FROM Employee e " +
+                            "WHERE e.lastName = :l_name", Employee.class)
+                    .setParameter("l_name", lastName)
+                    .getSingleResult();
 
-        Address address = createAddress("Vitoshka 15");
+            Address address = createAddress("Vitoshka 15");
 
-        entityManager.getTransaction().begin();
-        employee.setAddress(address);
-        entityManager.getTransaction().commit();
+            entityManager.getTransaction().begin();
+            employee.setAddress(address);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+
+            System.out.printf("Done! Employee %s %s is already at address %s!%n", employee.getFirstName(), employee.getLastName(),
+                    address.getText());
+
+        } catch (Exception e) {
+            System.out.println("There is no such employee.");
+        }
 
     }
 
@@ -269,7 +333,7 @@ public class Engine implements Runnable {
         entityManager.getTransaction().begin();
         Query query = entityManager.createQuery("UPDATE Town t " +
                 "SET t.name = UPPER(t.name) " +
-                "WHERE LENGTH(t.name) < 5 ");
+                "WHERE LENGTH(t.name) <= 5 ");
 
         int affectedRows = query.executeUpdate();
         System.out.println(affectedRows);
