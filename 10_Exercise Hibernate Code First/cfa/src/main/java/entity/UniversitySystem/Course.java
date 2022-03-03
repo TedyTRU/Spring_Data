@@ -5,6 +5,7 @@ import entity.BaseEntity;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -20,6 +21,7 @@ public class Course extends BaseEntity {
     private Teacher teacher;
 
     public Course() {
+        this.students = new HashSet<>();
     }
 
     @Column(unique = true)
