@@ -1,4 +1,6 @@
-package entity;
+package entity.GringottsDatabase;
+
+import entity.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
