@@ -122,6 +122,67 @@ public class BookServiceImpl implements BookService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<String> findBookBeforeDate(LocalDate date) {
+
+        return bookRepository
+                .findAllByReleaseDateBefore(date)
+                .stream()
+                .map(book -> String.format("%s %s %.2f",
+                            book.getTitle(), book.getEditionType().name(), book.getPrice()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> finAllBooksWhichContainAPattern(String pattern) {
+
+        return bookRepository
+                .findAllByTitleIsContaining(pattern)
+                .stream()
+                .map(Book::getTitle)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> findAllBooksWrittenByAuthorWithLastName(String pattern) {
+
+        List<Book> authors = bookRepository
+                .findAllByAuthor_LastNameStartsWith(pattern);
+
+        return bookRepository
+                .findAllByAuthor_LastNameStartsWith(pattern)
+                .stream()
+                .map(book -> String.format("%s (%s %s)",
+                        book.getTitle(), book.getAuthor().getFirstName(), book.getAuthor().getLastName()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public int findCountOfBooksWithTitleLengthLongerThan(int number) {
+
+        return bookRepository
+                .countOfBookByWithTitleLengthMoreThan(number);
+    }
+
+    @Override
+    public List<String> findAllBooksByTitle(String title) {
+
+        return bookRepository
+                .findAllByTitle(title)
+                .stream()
+                .map(book -> String.format("%s %s %s %.2f",
+                        book.getTitle(), book.getEditionType().name(),
+                        book.getAgeRestriction().name(), book.getPrice()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void changePrice(long bookId) {
+
+         bookRepository
+                .changeBookPriceByBookId(bookId);
+    }
+
     private Book createBookFromInfo(String[] bookInfo) {
         EditionType editionType = EditionType.values()[Integer.parseInt(bookInfo[0])];
         LocalDate releaseDate = LocalDate

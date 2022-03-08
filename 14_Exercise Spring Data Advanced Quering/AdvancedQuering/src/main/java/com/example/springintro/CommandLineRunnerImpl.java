@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class CommandLineRunnerImpl implements CommandLineRunner {
@@ -44,9 +46,94 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
             case 2 -> ex2_goldenBooks();
             case 3 -> ex3_booksByPrice();
             case 4 -> ex4_notReleasedBooks();
+            case 5 -> ex5_booksReleasedBeforeDate();
+            case 6 -> ex6_authorsSearch();
+            case 7 -> ex7_booksSearch();
+            case 8 -> ex8_booksTitlesSearch();
+            case 9 -> ex9_countBooks();
+            case 10 -> ex10_totalBooksCopies();
+            case 11 -> ex11_reducedBook();
+            case 12 -> ex12_increaseBookCopies();
+            case 99 -> test();
         }
 
 
+    }
+
+    private void test() {
+        bookService
+                .changePrice(1L);
+    }
+
+    private void ex12_increaseBookCopies() {
+
+    }
+
+    private void ex11_reducedBook() throws IOException {
+        System.out.println("Please enter the title of the book: ");
+        String title = bufferedReader.readLine().trim();
+
+        bookService
+                .findAllBooksByTitle(title)
+                .forEach(System.out::println);
+    }
+
+    private void ex10_totalBooksCopies() {
+        authorService
+                .findAllAuthorsBooksByTotalCopies()
+                .forEach(System.out::println);
+
+    }
+
+    private void ex9_countBooks() throws IOException {
+        System.out.println("Please enter a number: ");
+        int number = Integer.parseInt(bufferedReader.readLine());
+
+        System.out.println(bookService
+                .findCountOfBooksWithTitleLengthLongerThan(number));
+    }
+
+    private void ex8_booksTitlesSearch() throws IOException {
+        System.out.println("Please enter the pattern: ");
+        String pattern = bufferedReader.readLine();
+
+        bookService
+                .findAllBooksWrittenByAuthorWithLastName(pattern)
+                .forEach(System.out::println);
+    }
+
+    private void ex7_booksSearch() throws IOException {
+        System.out.println("Please enter the pattern: ");
+        String pattern = bufferedReader.readLine();
+
+        bookService
+                .finAllBooksWhichContainAPattern(pattern)
+                .forEach(System.out::println);
+    }
+
+    private void ex6_authorsSearch() throws IOException {
+        System.out.println("Please enter the pattern: ");
+        String pattern = bufferedReader.readLine();
+
+        authorService
+                .findAllAuthorsWhoseFirstNameEndsWith(pattern)
+                .forEach(System.out::println);
+
+    }
+
+    private void ex5_booksReleasedBeforeDate() throws IOException {
+        System.out.println("Please enter date: ");
+
+        try {
+            LocalDate date = LocalDate.parse(bufferedReader.readLine(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
+            bookService
+                    .findBookBeforeDate(date)
+                    .forEach(System.out::println);
+
+        } catch (Exception e) {
+            System.out.println("Invalid type of date!");
+        }
     }
 
     private void ex4_notReleasedBooks() throws IOException {
