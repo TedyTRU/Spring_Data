@@ -35,4 +35,7 @@ public interface BookService {
     List<String> findAllBooksByTitle(String title);
 
     void changePrice(long bookId);
+
+    int increaseCopiesAfterReleaseDate(LocalDate localDate, int number);
+
 }

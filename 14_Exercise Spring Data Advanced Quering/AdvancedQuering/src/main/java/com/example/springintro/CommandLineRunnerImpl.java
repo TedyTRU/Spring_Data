@@ -65,8 +65,15 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
                 .changePrice(1L);
     }
 
-    private void ex12_increaseBookCopies() {
+    private void ex12_increaseBookCopies() throws IOException {
+        System.out.println("Please enter a date: ");
+        LocalDate localDate = LocalDate.parse(bufferedReader.readLine(), DateTimeFormatter.ofPattern("dd MMM yyyy"));
 
+        System.out.println("Please enter the number of copies: ");
+        int numberOfBookCopies = Integer.parseInt(bufferedReader.readLine());
+
+        System.out.println(bookService
+                .increaseCopiesAfterReleaseDate(localDate, numberOfBookCopies));
     }
 
     private void ex11_reducedBook() throws IOException {

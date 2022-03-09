@@ -7,6 +7,7 @@ import com.example.springintro.service.BookService;
 import com.example.springintro.service.CategoryService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
@@ -181,6 +182,14 @@ public class BookServiceImpl implements BookService {
 
          bookRepository
                 .changeBookPriceByBookId(bookId);
+    }
+
+    @Override
+    @Transactional
+    public int increaseCopiesAfterReleaseDate(LocalDate localDate, int number) {
+        int affectedRows = bookRepository.updateCopiesAfterReleaseDate(number, localDate);
+
+        return affectedRows * number;
     }
 
     private Book createBookFromInfo(String[] bookInfo) {
