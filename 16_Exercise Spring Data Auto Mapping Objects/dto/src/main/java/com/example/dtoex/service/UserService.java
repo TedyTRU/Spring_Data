@@ -12,4 +12,8 @@ public interface UserService {
     void logout();
 
     boolean hasLoggedUser();
+
+    void buyGame(String gameTitle);
+
+    void printOwnedGames();
 }

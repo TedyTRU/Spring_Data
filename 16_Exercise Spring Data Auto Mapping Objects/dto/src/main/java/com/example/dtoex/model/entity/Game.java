@@ -13,7 +13,7 @@ public class Game extends BaseEntity {
     private String title;
     private String trailer;
     private String imageThumbnail;
-    private Integer  size;
+    private Integer size;
     private BigDecimal price;
     private String description;
     private LocalDate releaseDate;

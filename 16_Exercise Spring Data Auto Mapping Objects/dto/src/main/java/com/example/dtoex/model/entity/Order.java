@@ -22,7 +22,7 @@ public class Order extends BaseEntity {
         this.buyer = buyer;
     }
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     public Set<Game> getGames() {
         return games;
     }

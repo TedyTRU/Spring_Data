@@ -10,6 +10,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 @Service
@@ -48,8 +51,68 @@ public class GameServiceImpl implements GameService {
         }
 
         Game game = modelMapper.map(gameAddDto, Game.class);
+        game.setReleaseDate(LocalDate.parse(gameAddDto.getReleaseDate(), DateTimeFormatter.ofPattern("dd-MM-yyyy")));
 
         //save in DB
 
+        if (gameRepository.findGameByTitle(game.getTitle()) != null) {
+            System.out.printf("Game %s already exist%n", game.getTitle());
+            return;
+        }
+
+        gameRepository.save(game);
+
+        System.out.printf("Added %s%n", game.getTitle());
+
+
+    }
+
+    @Override
+    public void editGame(Long gameId, BigDecimal price, Double size) {
+        Game game = gameRepository
+                .findById(gameId)
+                .orElse(null);
+
+        if (game == null) {
+            System.out.printf("Game with id %d does not exist%n", gameId);
+            return;
+        }
+
+        game.setPrice(price);
+        game.setSize(Integer.parseInt(String.valueOf(size)));
+
+        gameRepository.save(game);
+
+        System.out.printf("Edited %s%n", game.getTitle());
+    }
+
+    @Override
+    public void deleteGame(Long gameId) {
+        Game game = gameRepository
+                .findById(gameId)
+                .orElse(null);
+
+        if (game == null) {
+            System.out.printf("Game with id %d does not exist%n", gameId);
+            return;
+        }
+
+        gameRepository.delete(game);
+        System.out.printf("Deleted %s%n", game.getTitle());
+    }
+
+    @Override
+    public void printAllGames() {
+        gameRepository
+                .findAll().forEach(game -> System.out.printf("%s %.2f%n", game.getTitle(), game.getPrice()));
+    }
+
+    @Override
+    public void printDetailsOfGame(String title) {
+        Game game = gameRepository
+                .findGameByTitle(title);
+
+        System.out.printf("Title: %s%nPrice: %.2f%nDescription: %s%nRelease date: %s%n",
+                game.getTitle(), game.getPrice(), game.getDescription(), game.getReleaseDate());
     }
 }

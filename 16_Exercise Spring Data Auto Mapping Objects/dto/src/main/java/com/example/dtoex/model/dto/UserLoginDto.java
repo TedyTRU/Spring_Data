@@ -16,7 +16,7 @@ public class UserLoginDto {
         this.password = password;
     }
 
-    @Email(message = "Enter valid email")
+    @Email(message = "Incorrect email.")
     public String getEmail() {
         return email;
     }
@@ -25,7 +25,7 @@ public class UserLoginDto {
         this.email = email;
     }
 
-    @Pattern(regexp = "\\w{6,}", message = "Enter valid password")
+    @Pattern(regexp = "\\w{6,}", message = "Incorrect password.")
     public String getPassword() {
         return password;
     }

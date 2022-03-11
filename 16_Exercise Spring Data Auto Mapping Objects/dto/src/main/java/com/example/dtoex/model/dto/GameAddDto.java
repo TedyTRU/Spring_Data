@@ -8,7 +8,7 @@ public class GameAddDto {
 
     private String title;
     private BigDecimal price;
-    private Integer size;
+    private Double size;
     private String trailer;
     private String thumbnailURL;
     private String description;
@@ -17,7 +17,7 @@ public class GameAddDto {
     public GameAddDto() {
     }
 
-    public GameAddDto(String title, BigDecimal price, Integer size, String trailer, String thumbnailURL, String description, String releaseDate) {
+    public GameAddDto(String title, BigDecimal price, Double size, String trailer, String thumbnailURL, String description, String releaseDate) {
         this.title = title;
         this.price = price;
         this.size = size;
@@ -27,7 +27,7 @@ public class GameAddDto {
         this.releaseDate = releaseDate;
     }
 
-    @Pattern(regexp = "^[A-Z][a-z]{3,100}", message = "Enter valid title")
+    @Pattern(regexp = "^[A-Z](?:\\S[ ]*){3,100}", message = "Enter valid title")
     public String getTitle() {
         return title;
     }
@@ -47,11 +47,11 @@ public class GameAddDto {
     }
 
     @Positive(message = "Invalid size")
-    public Integer getSize() {
+    public Double getSize() {
         return size;
     }
 
-    public void setSize(Integer size) {
+    public void setSize(Double size) {
         this.size = size;
     }
 

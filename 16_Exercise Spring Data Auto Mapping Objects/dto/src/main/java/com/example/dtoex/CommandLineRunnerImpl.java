@@ -29,7 +29,7 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         while (true) {
-            System.out.println("Please enter your commands: ");
+            System.out.println("Please enter your command: ");
             String[] commands = bufferedReader.readLine().split("\\|");
 
             switch (commands[0]) {
@@ -44,9 +44,28 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
 
                 case "AddGame" -> gameService
                         .addGame(new GameAddDto(commands[1], new BigDecimal(commands[2]),
-                                Integer.parseInt(commands[3]),
+                                Double.parseDouble(commands[3]),
                                 commands[4], commands[5], commands[6], commands[7]));
 
+                case "EditGame" -> gameService
+                        .editGame(Long.parseLong(commands[1]),
+                                new BigDecimal(commands[2]),
+                                Double.parseDouble(commands[3]));
+
+                case "DeleteGame" -> gameService
+                        .deleteGame(Long.parseLong(commands[1]));
+
+                case "AllGames" -> gameService
+                        .printAllGames();
+
+                case "DetailGame" -> gameService
+                        .printDetailsOfGame(commands[1]);
+
+                case "BuyGame" -> userService
+                        .buyGame(commands[1]);
+
+                case "OwnedGames" -> userService
+                        .printOwnedGames();
 
             }
 

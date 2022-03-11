@@ -1,6 +1,7 @@
 package com.example.dtoex.model.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -11,7 +12,7 @@ public class User extends BaseEntity {
     private String password;
     private String fullName;
     private Set<Game> games;
-    private Boolean isAdministrator;
+    private Boolean isAdministrator = false;
 
     public User() {
     }
@@ -52,7 +53,7 @@ public class User extends BaseEntity {
         isAdministrator = administrator;
     }
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     public Set<Game> getGames() {
         return games;
     }
