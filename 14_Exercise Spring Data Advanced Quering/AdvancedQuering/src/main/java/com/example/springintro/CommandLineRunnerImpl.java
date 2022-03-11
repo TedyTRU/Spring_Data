@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 @Component
 public class CommandLineRunnerImpl implements CommandLineRunner {
@@ -67,7 +68,7 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
 
     private void ex12_increaseBookCopies() throws IOException {
         System.out.println("Please enter a date: ");
-        LocalDate localDate = LocalDate.parse(bufferedReader.readLine(), DateTimeFormatter.ofPattern("dd MMM yyyy"));
+        LocalDate localDate = LocalDate.parse(bufferedReader.readLine(), DateTimeFormatter.ofPattern("dd MMM yyyy").withLocale(Locale.ENGLISH));
 
         System.out.println("Please enter the number of copies: ");
         int numberOfBookCopies = Integer.parseInt(bufferedReader.readLine());
