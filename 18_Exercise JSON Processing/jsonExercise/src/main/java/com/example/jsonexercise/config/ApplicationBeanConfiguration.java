@@ -21,4 +21,5 @@ public class ApplicationBeanConfiguration {
                 .setPrettyPrinting()
                 .create();
     }
+
 }

@@ -19,4 +19,5 @@ public class ValidationUtilImpl implements ValidationUtil {
     public <E> boolean isValid(E entity) {
         return validator.validate(entity).isEmpty();
     }
+
 }

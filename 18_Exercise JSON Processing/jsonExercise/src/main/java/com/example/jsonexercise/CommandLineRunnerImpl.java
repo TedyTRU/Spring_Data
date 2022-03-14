@@ -31,4 +31,5 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
         userService.seedUsers();
         productService.seedProducts();
     }
+
 }

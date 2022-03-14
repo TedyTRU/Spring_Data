@@ -34,4 +34,5 @@ public class ProductSeedDto {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
+
 }

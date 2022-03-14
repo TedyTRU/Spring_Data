@@ -10,4 +10,5 @@ public class JsonExerciseApplication {
         SpringApplication.run(JsonExerciseApplication.class, args);
     }
 
+
 }

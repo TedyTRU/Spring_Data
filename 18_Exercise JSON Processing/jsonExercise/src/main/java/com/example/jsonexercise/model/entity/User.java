@@ -53,4 +53,5 @@ public class User extends BaseEntity {
     public void setFriends(Set<User> users) {
         this.friends = users;
     }
+
 }

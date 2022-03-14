@@ -61,4 +61,5 @@ public class Product extends BaseEntity {
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
     }
+
 }

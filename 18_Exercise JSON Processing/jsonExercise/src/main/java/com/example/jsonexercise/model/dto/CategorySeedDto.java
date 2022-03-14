@@ -20,4 +20,5 @@ public class CategorySeedDto {
     public void setName(String name) {
         this.name = name;
     }
+
 }

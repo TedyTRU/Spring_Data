@@ -9,4 +9,5 @@ public interface UserService {
     void seedUsers() throws IOException;
 
     User findRandomUser();
+
 }

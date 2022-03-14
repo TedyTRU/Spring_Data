@@ -38,4 +38,5 @@ public class Category extends BaseEntity {
     public int hashCode() {
         return Objects.hash(name);
     }
+
 }
