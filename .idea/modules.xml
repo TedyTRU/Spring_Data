@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/04_Exercise_ Java DB Apps Introduction/JDBC_Intro/JDBC_Intro.iml" filepath="$PROJECT_DIR$/04_Exercise_ Java DB Apps Introduction/JDBC_Intro/JDBC_Intro.iml" />
+      <module fileurl="file://$PROJECT_DIR$/03_LAB_DB Apps Introduction/LAB_diablo/LAB_diablo.iml" filepath="$PROJECT_DIR$/03_LAB_DB Apps Introduction/LAB_diablo/LAB_diablo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/03_LAB_DB Apps Introduction/LAB_soft_uni/LAB_soft_uni.iml" filepath="$PROJECT_DIR$/03_LAB_DB Apps Introduction/LAB_soft_uni/LAB_soft_uni.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Spring_Data.iml" filepath="$PROJECT_DIR$/.idea/Spring_Data.iml" />
+      <module fileurl="file://$PROJECT_DIR$/04_Exercise_ Java DB Apps Introduction/homework/homework.iml" filepath="$PROJECT_DIR$/04_Exercise_ Java DB Apps Introduction/homework/homework.iml" />
+    </modules>
+  </component>
+</project>

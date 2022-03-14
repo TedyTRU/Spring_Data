@@ -18,10 +18,6 @@ public class ApplicationBeanConfiguration {
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
 
-        modelMapper
-                .typeMap(GameAddDto.class, Game.class)
-                .addMappings(mapper -> mapper.map(GameAddDto::getThumbnailURL, Game::setImageThumbnail));
-
         Converter<String, LocalDate> localDateConverter = new Converter<String, LocalDate>() {
             @Override
             public LocalDate convert(MappingContext<String, LocalDate> mappingContext) {
@@ -33,6 +29,9 @@ public class ApplicationBeanConfiguration {
 
         modelMapper
                 .addConverter(localDateConverter);
+
+        modelMapper.createTypeMap(GameAddDto.class, Game.class)
+                .addMappings(mapper -> mapper.map(GameAddDto::getThumbnailURL, Game::setImageThumbnail));
 
         return modelMapper;
     }
