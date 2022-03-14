@@ -60,6 +60,12 @@ public class UserServiceImpl implements UserService {
             return;
         }
 
+        if (hasLoggedUser()) {
+            System.out.println("There is already a logged-in user. Please first log out.");
+
+            return;
+        }
+
         userRepository.save(user);
 
         if (user.getId() == 1L) {
@@ -67,6 +73,7 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.save(user);
+        loggedInUser = user;
         System.out.printf("%s was registered%n", user.getFullName());
 
     }
@@ -90,14 +97,14 @@ public class UserServiceImpl implements UserService {
                 .findByEmailAndPassword(userLoginDto.getEmail(), userLoginDto.getPassword())
                 .orElse(null);
 
-        if (user == null) {
-            System.out.println("Incorrect username / password");
+        if (hasLoggedUser()) {
+            System.out.println("There is already a logged-in user. Please first log out.");
 
             return;
         }
 
-        if (hasLoggedUser()) {
-            System.out.println("There is already a logged-in user. Please first log out.");
+        if (user == null) {
+            System.out.println("Incorrect username / password");
 
             return;
         }
@@ -170,5 +177,13 @@ public class UserServiceImpl implements UserService {
         loggedInUser
                 .getGames()
                 .forEach(game -> System.out.println(game.getTitle()));
+    }
+
+    @Override
+    public boolean userIsAdmin() {
+        if (loggedInUser != null) {
+            return this.loggedInUser.getAdministrator();
+        }
+        return false;
     }
 }

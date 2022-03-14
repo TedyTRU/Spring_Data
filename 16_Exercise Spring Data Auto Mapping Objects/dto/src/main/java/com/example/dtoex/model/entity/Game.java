@@ -13,7 +13,7 @@ public class Game extends BaseEntity {
     private String title;
     private String trailer;
     private String imageThumbnail;
-    private Integer size;
+    private Double size;
     private BigDecimal price;
     private String description;
     private LocalDate releaseDate;
@@ -49,11 +49,11 @@ public class Game extends BaseEntity {
     }
 
     @Column
-    public Integer getSize() {
+    public Double getSize() {
         return size;
     }
 
-    public void setSize(Integer size) {
+    public void setSize(Double size) {
         this.size = size;
     }
 

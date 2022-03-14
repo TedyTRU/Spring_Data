@@ -1,6 +1,7 @@
 package com.example.dtoex.model.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -11,6 +12,12 @@ public class Order extends BaseEntity {
     private Set<Game> games;
 
     public Order() {
+        this.games = new HashSet<>();
+    }
+
+    public Order(User buyer, Set<Game> games) {
+        this.buyer = buyer;
+        this.games = games;
     }
 
     @ManyToOne

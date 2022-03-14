@@ -16,4 +16,6 @@ public interface UserService {
     void buyGame(String gameTitle);
 
     void printOwnedGames();
+
+    boolean userIsAdmin();
 }

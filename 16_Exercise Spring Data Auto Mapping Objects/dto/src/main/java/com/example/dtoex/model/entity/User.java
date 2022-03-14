@@ -13,8 +13,11 @@ public class User extends BaseEntity {
     private String fullName;
     private Set<Game> games;
     private Boolean isAdministrator = false;
+    private Set<Order> orders;
 
     public User() {
+        this.games = new HashSet<>();
+        this.orders = new HashSet<>();
     }
 
     @Column
@@ -44,7 +47,7 @@ public class User extends BaseEntity {
         this.fullName = fullName;
     }
 
-    @Column(name = "is_administrator")
+    @Column(name = "is_admin")
     public Boolean getAdministrator() {
         return isAdministrator;
     }
@@ -60,5 +63,14 @@ public class User extends BaseEntity {
 
     public void setGames(Set<Game> games) {
         this.games = games;
+    }
+
+    @OneToMany(targetEntity = Order.class, mappedBy = "buyer", fetch = FetchType.EAGER)
+    public Set<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
     }
 }

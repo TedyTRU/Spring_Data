@@ -42,18 +42,34 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
                 case "Logout" -> userService
                         .logout();
 
-                case "AddGame" -> gameService
-                        .addGame(new GameAddDto(commands[1], new BigDecimal(commands[2]),
-                                Double.parseDouble(commands[3]),
-                                commands[4], commands[5], commands[6], commands[7]));
+                case "AddGame" -> {
+                    if (userService.userIsAdmin()) {
+                        gameService
+                                .addGame(new GameAddDto(commands[1], new BigDecimal(commands[2]),
+                                        Double.parseDouble(commands[3]),
+                                        commands[4], commands[5], commands[6], commands[7]));
+                    } else {
+                        System.out.println("You need to be admin!");
+                    }
+                }
 
-                case "EditGame" -> gameService
-                        .editGame(Long.parseLong(commands[1]),
-                                new BigDecimal(commands[2]),
-                                Double.parseDouble(commands[3]));
+                case "EditGame" -> {
+                    if (userService.userIsAdmin()) {
+                        gameService
+                                .editGame(Long.parseLong(commands[1]), commands);
+                    } else {
+                        System.out.println("You need to be admin!");
+                    }
+                }
 
-                case "DeleteGame" -> gameService
-                        .deleteGame(Long.parseLong(commands[1]));
+                case "DeleteGame" -> {
+                    if (userService.userIsAdmin()) {
+                        gameService
+                                .deleteGame(Long.parseLong(commands[1]));
+                    } else {
+                        System.out.println("You need to be admin!");
+                    }
+                }
 
                 case "AllGames" -> gameService
                         .printAllGames();
@@ -67,9 +83,10 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
                 case "OwnedGames" -> userService
                         .printOwnedGames();
 
+                case "Exit" -> System.exit(0);
+
+                default -> System.out.println("Unknown Command");
             }
-
         }
-
     }
 }

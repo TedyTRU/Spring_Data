@@ -13,6 +13,7 @@ import javax.validation.ConstraintViolation;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Set;
 
 @Service
@@ -63,12 +64,11 @@ public class GameServiceImpl implements GameService {
         gameRepository.save(game);
 
         System.out.printf("Added %s%n", game.getTitle());
-
-
     }
 
     @Override
-    public void editGame(Long gameId, BigDecimal price, Double size) {
+    public void editGame(Long gameId, String[] commands) {
+
         Game game = gameRepository
                 .findById(gameId)
                 .orElse(null);
@@ -78,12 +78,43 @@ public class GameServiceImpl implements GameService {
             return;
         }
 
-        game.setPrice(price);
-        game.setSize(Integer.parseInt(String.valueOf(size)));
+        editedGame(commands, game);
+
+        GameAddDto gameAddDto = new GameAddDto(game.getTitle(), game.getPrice(), game.getSize(),
+                game.getTrailer(), game.getImageThumbnail(), game.getDescription(), String.valueOf(game.getReleaseDate()));
+
+        Set<ConstraintViolation<GameAddDto>> violations = validationUtil
+                .getViolation(gameAddDto);
+        if (!violations.isEmpty()) {
+            violations
+                    .stream()
+                    .map(ConstraintViolation::getMessage)
+                    .forEach(System.out::println);
+
+            return;
+        }
 
         gameRepository.save(game);
 
         System.out.printf("Edited %s%n", game.getTitle());
+    }
+
+    private void editedGame(String[] commands, Game game) {
+        String[] tokens = Arrays.stream(commands).skip(1).toArray(String[]::new);
+
+        for (String token : tokens) {
+            String[] fields = token.split("=");
+            switch (fields[0]) {
+                case "title" -> game.setTitle(fields[1]);
+                case "trailer" -> game.setTrailer(fields[1]);
+                case "imageThumbnail" -> game.setImageThumbnail(fields[1]);
+                case "size" -> game.setSize(Double.parseDouble(fields[1]));
+                case "price" -> game.setPrice(new BigDecimal(fields[1]));
+                case "description" -> game.setDescription(fields[1]);
+                case "releaseDate" -> game
+                        .setReleaseDate(LocalDate.parse(fields[1], DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            }
+        }
     }
 
     @Override
