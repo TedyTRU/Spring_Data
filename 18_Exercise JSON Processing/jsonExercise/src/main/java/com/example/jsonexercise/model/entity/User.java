@@ -1,9 +1,6 @@
 package com.example.jsonexercise.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
@@ -14,6 +11,7 @@ public class User extends BaseEntity {
     private String firstName;
     private String lastName;
     private Set<User> friends;
+    private Set<Product> soldProducts;
 
     public User() {
     }
@@ -54,4 +52,12 @@ public class User extends BaseEntity {
         this.friends = users;
     }
 
+    @OneToMany(mappedBy = "seller", fetch = FetchType.EAGER)
+    public Set<Product> getSoldProducts() {
+        return soldProducts;
+    }
+
+    public void setSoldProducts(Set<Product> soldProduct) {
+        this.soldProducts = soldProduct;
+    }
 }

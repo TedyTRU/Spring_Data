@@ -1,7 +1,8 @@
 package com.example.jsonexercise.service.Impl;
 
 import com.example.jsonexercise.constants.GlobalConstants;
-import com.example.jsonexercise.model.dto.CategorySeedDto;
+import com.example.jsonexercise.model.dto.categoriesByProductsCount.CategoriesByProductsDto;
+import com.example.jsonexercise.model.dto.seed.CategorySeedDto;
 import com.example.jsonexercise.model.entity.Category;
 import com.example.jsonexercise.repository.CategoryRepository;
 import com.example.jsonexercise.service.CategoryService;
@@ -15,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -73,6 +75,13 @@ public class CategoryServiceImpl implements CategoryService {
 
         }
         return categorySet;
+    }
+
+    @Override
+    public List<CategoriesByProductsDto> productDetailsByCategory() {
+
+        return categoryRepository.getCategoriesByProductsCount();
+
     }
 
 }

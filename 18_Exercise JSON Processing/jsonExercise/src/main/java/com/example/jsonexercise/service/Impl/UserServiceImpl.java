@@ -1,7 +1,8 @@
 package com.example.jsonexercise.service.Impl;
 
 import com.example.jsonexercise.constants.GlobalConstants;
-import com.example.jsonexercise.model.dto.UserSeedDto;
+import com.example.jsonexercise.model.dto.seed.UserSeedDto;
+import com.example.jsonexercise.model.dto.successfullySoldProducts.UserSoldDto;
 import com.example.jsonexercise.model.entity.User;
 import com.example.jsonexercise.repository.UserRepository;
 import com.example.jsonexercise.service.UserService;
@@ -14,7 +15,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -57,6 +60,16 @@ public class UserServiceImpl implements UserService {
                 .findById(randomId)
                 .orElse(null);
 
+    }
+
+    @Override
+    public List<UserSoldDto> findAllUsersWithMoreThanOneSoldProducts() {
+
+        return userRepository
+                .findAllUsersWithMoreThanOneSoldProductsOrderByLastNameThenByFirstName()
+                .stream()
+                .map(user -> modelMapper.map(user, UserSoldDto.class))
+                .collect(Collectors.toList());
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.jsonexercise.model.dto;
+package com.example.jsonexercise.model.dto.seed;
 
 import com.google.gson.annotations.Expose;
 

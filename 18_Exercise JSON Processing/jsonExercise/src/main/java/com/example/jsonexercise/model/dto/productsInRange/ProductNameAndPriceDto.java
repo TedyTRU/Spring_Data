@@ -1,12 +1,11 @@
-package com.example.jsonexercise.model.dto;
+package com.example.jsonexercise.model.dto.productsInRange;
 
+import com.example.jsonexercise.model.entity.User;
 import com.google.gson.annotations.Expose;
 
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
-public class ProductSeedDto {
+public class ProductNameAndPriceDto {
 
     @Expose
     private String name;
@@ -14,10 +13,13 @@ public class ProductSeedDto {
     @Expose
     private BigDecimal price;
 
-    public ProductSeedDto() {
+    @Expose
+    private String seller;
+
+
+    public ProductNameAndPriceDto() {
     }
 
-    @Size(min = 3)
     public String getName() {
         return name;
     }
@@ -26,7 +28,6 @@ public class ProductSeedDto {
         this.name = name;
     }
 
-    @Positive
     public BigDecimal getPrice() {
         return price;
     }
@@ -35,4 +36,11 @@ public class ProductSeedDto {
         this.price = price;
     }
 
+    public String getSeller() {
+        return seller;
+    }
+
+    public void setSeller(String seller) {
+        this.seller = seller;
+    }
 }

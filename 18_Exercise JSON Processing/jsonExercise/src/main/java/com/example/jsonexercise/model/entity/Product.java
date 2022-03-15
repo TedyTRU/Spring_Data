@@ -53,7 +53,7 @@ public class Product extends BaseEntity {
         this.seller = seller;
     }
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     public Set<Category> getCategories() {
         return categories;
     }

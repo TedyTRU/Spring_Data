@@ -12,6 +12,7 @@ import java.util.Set;
 public class Category extends BaseEntity {
 
     private String name;
+    private Set<Product> products;
 
     public Category() {
     }
@@ -25,6 +26,14 @@ public class Category extends BaseEntity {
         this.name = name;
     }
 
+    @ManyToMany(mappedBy = "categories")
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
+    }
 
     @Override
     public boolean equals(Object o) {
