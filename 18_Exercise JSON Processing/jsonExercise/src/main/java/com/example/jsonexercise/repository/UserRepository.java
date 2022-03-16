@@ -15,4 +15,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "WHERE p.seller.id = u.id) > 0 " +
             "ORDER BY u.lastName, u.firstName")
     List<User> findAllUsersWithMoreThanOneSoldProductsOrderByLastNameThenByFirstName();
+
+    @Query("SELECT u FROM User u " +
+            "WHERE u.soldProducts.size > 0 " +
+            "ORDER BY u.soldProducts.size DESC, u.lastName")
+    List<User> findAllUsersWithMoreThanOneSoldProductsOrderBySoldProducts();
+
 }

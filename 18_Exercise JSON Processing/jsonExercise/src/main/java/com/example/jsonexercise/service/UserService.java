@@ -1,6 +1,7 @@
 package com.example.jsonexercise.service;
 
 import com.example.jsonexercise.model.dto.successfullySoldProducts.UserSoldDto;
+import com.example.jsonexercise.model.dto.usersAndProducts.CountOfSellersDto;
 import com.example.jsonexercise.model.entity.User;
 
 import java.io.IOException;
@@ -14,4 +15,5 @@ public interface UserService {
 
     List<UserSoldDto> findAllUsersWithMoreThanOneSoldProducts();
 
+    CountOfSellersDto findAllUsersWithSoldProducts();
 }

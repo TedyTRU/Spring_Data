@@ -3,6 +3,10 @@ package com.example.jsonexercise.service.Impl;
 import com.example.jsonexercise.constants.GlobalConstants;
 import com.example.jsonexercise.model.dto.seed.UserSeedDto;
 import com.example.jsonexercise.model.dto.successfullySoldProducts.UserSoldDto;
+import com.example.jsonexercise.model.dto.usersAndProducts.CountOfSellersDto;
+import com.example.jsonexercise.model.dto.usersAndProducts.CountOfSoldProductsDto;
+import com.example.jsonexercise.model.dto.usersAndProducts.ProductDetailsDto;
+import com.example.jsonexercise.model.dto.usersAndProducts.UsersDto;
 import com.example.jsonexercise.model.entity.User;
 import com.example.jsonexercise.repository.UserRepository;
 import com.example.jsonexercise.service.UserService;
@@ -70,6 +74,39 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(user -> modelMapper.map(user, UserSoldDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public CountOfSellersDto findAllUsersWithSoldProducts() {
+
+        List<User> users = userRepository
+                .findAllUsersWithMoreThanOneSoldProductsOrderBySoldProducts();
+
+        List<UsersDto> usersAndProducts = users
+                .stream()
+                .map(user -> {
+                    UsersDto userDto = modelMapper.map(user, UsersDto.class);
+
+                    List<ProductDetailsDto> productDetailsDtos = user
+                            .getSoldProducts()
+                            .stream()
+                            .map(product -> modelMapper.map(product, ProductDetailsDto.class))
+                            .toList();
+
+                    CountOfSoldProductsDto products = new CountOfSoldProductsDto();
+                    products.setSoldProducts(productDetailsDtos);
+                    products.setCount(productDetailsDtos.size());
+
+                    userDto.setSoldProducts(products);
+
+                    return userDto;
+                }).toList();
+
+        CountOfSellersDto countOfSellersDto = new CountOfSellersDto();
+        countOfSellersDto.setCount(users.size());
+        countOfSellersDto.setUsers(usersAndProducts);
+
+        return countOfSellersDto;
     }
 
 }

@@ -3,6 +3,7 @@ package com.example.jsonexercise;
 import com.example.jsonexercise.model.dto.categoriesByProductsCount.CategoriesByProductsDto;
 import com.example.jsonexercise.model.dto.productsInRange.ProductNameAndPriceDto;
 import com.example.jsonexercise.model.dto.successfullySoldProducts.UserSoldDto;
+import com.example.jsonexercise.model.dto.usersAndProducts.CountOfSellersDto;
 import com.example.jsonexercise.service.CategoryService;
 import com.example.jsonexercise.service.ProductService;
 import com.example.jsonexercise.service.UserService;
@@ -26,6 +27,7 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
     private static final String PRODUCT_IN_RANGE_FILE_NAME = "products-in-range.json";
     private static final String USERS_AND_SOLD_PRODUCTS = "users-and-sold-products.json";
     private static final String CATEGORIES_BY_PRODUCTS_FILE_NAME = "categories-by-products.json";
+    private static final String USERS_AND_PRODUCTS_FILE_NAME = "users-and-products.json";
 
     private final CategoryService categoryService;
     private final UserService userService;
@@ -45,17 +47,32 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
     public void run(String... args) throws Exception {
         seedData();
 
+        System.out.println("Number 99 will exit the program");
         System.out.println("Enter exercise: ");
         int exNum = Integer.parseInt(bufferedReader.readLine());
 
         while (true) {
+
             switch (exNum) {
                 case 1 -> productsInRange();
                 case 2 -> soldProducts();
                 case 3 -> categoriesByProductsCount();
+                case 4 -> usersAndProducts();
+                case 99 -> System.exit(0);
+                default -> System.out.println("Please enter valid exercise number");
             }
         }
 
+
+    }
+
+    private void usersAndProducts() throws IOException {
+        CountOfSellersDto countOfSellersDto = userService
+                .findAllUsersWithSoldProducts();
+
+        String content = gson.toJson(countOfSellersDto);
+
+        writeToFile(OUTPUT_FILES_PATH + USERS_AND_PRODUCTS_FILE_NAME, content);
 
     }
 
