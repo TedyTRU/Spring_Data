@@ -3,16 +3,14 @@ package com.example.jsonexercise_2.model.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "customers")
 public class Customer extends BaseEntity {
 
     private String name;
-    private String birthDate;
+    private LocalDateTime birthDate;
     private Boolean isYoungDriver;
 
     public Customer() {
@@ -28,11 +26,11 @@ public class Customer extends BaseEntity {
     }
 
     @Column(name = "birth_date")
-    public String getBirthDate() {
+    public LocalDateTime getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(LocalDateTime birthDate) {
         this.birthDate = birthDate;
     }
 

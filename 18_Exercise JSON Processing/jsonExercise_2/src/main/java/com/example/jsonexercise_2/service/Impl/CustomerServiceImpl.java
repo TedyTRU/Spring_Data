@@ -1,9 +1,13 @@
 package com.example.jsonexercise_2.service.Impl;
 
+import com.example.jsonexercise_2.model.dto.ex1.OrderedCustomersDto;
+import com.example.jsonexercise_2.model.dto.ex1.SalesDto;
 import com.example.jsonexercise_2.model.dto.seed.CustomerSeedDto;
 import com.example.jsonexercise_2.model.entity.Customer;
+import com.example.jsonexercise_2.model.entity.Sale;
 import com.example.jsonexercise_2.repository.CustomerRepository;
 import com.example.jsonexercise_2.service.CustomerService;
+import com.example.jsonexercise_2.service.SaleService;
 import com.example.jsonexercise_2.util.ValidationUtil;
 import com.google.gson.Gson;
 import org.modelmapper.ModelMapper;
@@ -13,6 +17,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 import static com.example.jsonexercise_2.constants.GlobalConstants.RESOURCE_FILE_PATH;
 
@@ -56,6 +62,14 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer getCustomerById(long id) {
         return customerRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Customer> findAllOrderedByBirthDay() {
+
+        return customerRepository.findAll().stream()
+                .sorted(Comparator.comparing(Customer::getBirthDate).thenComparing(Customer::getYoungDriver))
+                .toList();
     }
 
 }

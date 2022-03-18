@@ -34,9 +34,9 @@ public class SaleServiceImpl implements SaleService {
     @Override
     public void seedSales() {
 
-        if (saleRepository.count() > 0) {
-            return;
-        }
+//        if (saleRepository.count() > 0) {
+//            return;
+//        }
 
         BigDecimal[] discounts = new BigDecimal[]{
                 BigDecimal.valueOf(0),
@@ -56,7 +56,6 @@ public class SaleServiceImpl implements SaleService {
             Customer customer = customerService.getCustomerById(i);
             Car car = carService.getRandomCar();
             sale.setCustomer(customer);
-
 
             sale.setCar(car);
 //            try {
@@ -133,5 +132,13 @@ public class SaleServiceImpl implements SaleService {
 
         return list;
     }
+
+    @Override
+    public List<Sale> getSalesByCustomer(Long id) {
+
+        return saleRepository.findAllByCustomer_Id(id);
+
+    }
+
 
 }
