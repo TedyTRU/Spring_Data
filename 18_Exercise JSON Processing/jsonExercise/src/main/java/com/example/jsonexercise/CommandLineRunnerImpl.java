@@ -47,11 +47,10 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
     public void run(String... args) throws Exception {
         seedData();
 
-        System.out.println("Number 99 will exit the program");
-        System.out.println("Enter exercise: ");
-        int exNum = Integer.parseInt(bufferedReader.readLine());
-
         while (true) {
+
+            System.out.println("Enter exercise: ");
+            int exNum = Integer.parseInt(bufferedReader.readLine());
 
             switch (exNum) {
                 case 1 -> productsInRange();
@@ -62,7 +61,6 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
                 default -> System.out.println("Please enter valid exercise number");
             }
         }
-
 
     }
 
