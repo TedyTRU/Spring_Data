@@ -1,9 +1,6 @@
 package com.example.xmlexercise.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
@@ -26,7 +23,7 @@ public class Category extends BaseEntity {
         this.name = name;
     }
 
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.EAGER)
     public Set<Product> getProducts() {
         return products;
     }
