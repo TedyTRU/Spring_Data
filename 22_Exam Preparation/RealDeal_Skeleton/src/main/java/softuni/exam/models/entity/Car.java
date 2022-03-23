@@ -13,7 +13,7 @@ public class Car extends BaseEntity {
 
     private String make;
     private String model;
-    private Long kilometers;
+    private Integer kilometers;
     private LocalDate registeredOn;
     private Set<Picture> pictures;
 
@@ -39,11 +39,11 @@ public class Car extends BaseEntity {
     }
 
     @Column
-    public Long getKilometers() {
+    public Integer getKilometers() {
         return kilometers;
     }
 
-    public void setKilometers(Long kilometers) {
+    public void setKilometers(Integer kilometers) {
         this.kilometers = kilometers;
     }
 
