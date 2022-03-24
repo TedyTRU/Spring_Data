@@ -1,9 +1,6 @@
 package softuni.exam.models.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -56,7 +53,7 @@ public class Car extends BaseEntity {
         this.registeredOn = registeredOn;
     }
 
-    @OneToMany(mappedBy = "car")
+    @OneToMany(mappedBy = "car", fetch = FetchType.EAGER)
     public Set<Picture> getPictures() {
         return pictures;
     }
