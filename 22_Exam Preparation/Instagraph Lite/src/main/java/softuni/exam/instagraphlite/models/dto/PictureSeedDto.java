@@ -1,4 +1,4 @@
-package softuni.exam.instagraphlite.models;
+package softuni.exam.instagraphlite.models.dto;
 
 import com.google.gson.annotations.Expose;
 

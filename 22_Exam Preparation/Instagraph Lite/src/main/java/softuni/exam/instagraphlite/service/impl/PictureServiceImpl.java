@@ -3,7 +3,7 @@ package softuni.exam.instagraphlite.service.impl;
 import com.google.gson.Gson;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import softuni.exam.instagraphlite.models.PictureSeedDto;
+import softuni.exam.instagraphlite.models.dto.PictureSeedDto;
 import softuni.exam.instagraphlite.models.entity.Picture;
 import softuni.exam.instagraphlite.repository.PictureRepository;
 import softuni.exam.instagraphlite.service.PictureService;
@@ -13,8 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class PictureServiceImpl implements PictureService {
@@ -49,15 +48,13 @@ public class PictureServiceImpl implements PictureService {
         StringBuilder sb = new StringBuilder();
 
         PictureSeedDto[] pictureSeedDtos = gson.fromJson(readFromFileContent(), PictureSeedDto[].class);
-//
-//        List<Picture> pictures = Arrays.stream(pictureSeedDtos)
-//                .filter(validationUtil::isValid)
-//                .map(pictureSeedDto -> modelMapper.map(pictureSeedDto, Picture.class))
-//                .toList();
 
         Arrays.stream(pictureSeedDtos)
                 .filter(pictureSeedDto -> {
-                    boolean isValid = validationUtil.isValid(pictureSeedDto);
+                    boolean isValid = validationUtil.isValid(pictureSeedDto)
+                            && !isEntityExists(pictureSeedDto.getPath())
+                            //&& pictureSeedDto.getSize() != null
+                            ;
                     sb
                             .append(isValid
                                     ? String.format("Successfully imported Picture, with size %.2f", pictureSeedDto.getSize())
@@ -68,12 +65,22 @@ public class PictureServiceImpl implements PictureService {
                 })
                 .map(pictureSeedDto -> modelMapper.map(pictureSeedDto, Picture.class))
                 .forEach(pictureRepository::save);
-        System.out.println(sb);
+
         return sb.toString();
     }
 
     @Override
     public String exportPictures() {
         return null;
+    }
+
+    @Override
+    public boolean isEntityExists(String path) {
+        return pictureRepository.existsByPath(path);
+    }
+
+    @Override
+    public Picture findPictureByPath(String path) {
+        return pictureRepository.findPictureByPath(path).orElse(null);
     }
 }
