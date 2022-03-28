@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class PictureServiceImpl implements PictureService {
@@ -31,7 +31,6 @@ public class PictureServiceImpl implements PictureService {
         this.modelMapper = modelMapper;
         this.validationUtil = validationUtil;
     }
-
 
     @Override
     public boolean areImported() {
@@ -71,7 +70,17 @@ public class PictureServiceImpl implements PictureService {
 
     @Override
     public String exportPictures() {
-        return null;
+        StringBuilder sb = new StringBuilder();
+
+        List<Picture> pictures = pictureRepository
+                .findAllBySizeIsGreaterThanOrderBySize(30000D);
+
+        pictures.forEach(picture -> {
+            sb.append(String.format("%.2f – %s", picture.getSize(), picture.getPath()))
+                    .append(System.lineSeparator());
+        });
+
+        return sb.toString();
     }
 
     @Override

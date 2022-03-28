@@ -6,4 +6,5 @@ import softuni.exam.instagraphlite.models.entity.Post;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
+
 }

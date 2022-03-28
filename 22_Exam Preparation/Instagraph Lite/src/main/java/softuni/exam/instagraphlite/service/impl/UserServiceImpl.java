@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -92,7 +94,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String exportUsersWithTheirPosts() {
-        return null;
+        StringBuilder sb = new StringBuilder();
+
+        List<User> users = userRepository
+                .findAllByPostsCountOrderByPostsDescThenByUserId();
+
+        users
+                .forEach(user -> {
+                    sb.append(String.format("User: %s", user.getUserName())).append(System.lineSeparator());
+                    sb.append(String.format("Post count: %d", user.getPosts().size())).append(System.lineSeparator());
+                    //sb.append("==Post Details:").append(System.lineSeparator());
+
+                    user.getPosts()
+                            .stream()
+                            .sorted(Comparator.comparing(post -> post.getPicture().getSize()))
+                            .forEach(post -> {
+                                sb.append("==Post Details:").append(System.lineSeparator());
+                                sb.append(String.format("----Caption: %s", post.getCaption()))
+                                        .append(System.lineSeparator());
+                                sb.append(String.format("----Picture Size: %.2f", post.getPicture().getSize()))
+                                        .append(System.lineSeparator());
+                            });
+                });
+
+        return sb.toString();
     }
 
     @Override
