@@ -1,5 +1,6 @@
 package com.example.next_level_technologies.services.impl;
 
+import com.example.next_level_technologies.entities.dto.ExportedProjectDto;
 import com.example.next_level_technologies.entities.dto.ProjectDto;
 import com.example.next_level_technologies.entities.models.Company;
 import com.example.next_level_technologies.entities.models.Project;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -57,5 +60,12 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project find(Long id) {
         return this.projectRepository.findById(id).orElseThrow();
+    }
+
+    @Override
+    public List<ExportedProjectDto> finishedProjects() {
+        return this.projectRepository.findAllByFinishedIsTrue()
+                .stream().map(p -> this.modelMapper.map(p, ExportedProjectDto.class))
+                .collect(Collectors.toList());
     }
 }

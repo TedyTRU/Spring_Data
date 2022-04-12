@@ -6,6 +6,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "projects")
@@ -15,7 +16,7 @@ public class Project extends BaseEntity {
     private String description;
     private Boolean isFinished;
     private BigDecimal payment;
-    private LocalDate startDate;
+    private Date startDate;
     private Company company;
 
     public Project() {
@@ -58,11 +59,11 @@ public class Project extends BaseEntity {
     }
 
     @Column(name = "start_date")
-    public LocalDate getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 

@@ -1,6 +1,7 @@
 package com.example.next_level_technologies.services.impl;
 
 import com.example.next_level_technologies.entities.dto.EmployeeDto;
+import com.example.next_level_technologies.entities.dto.ExportedEmployeeDto;
 import com.example.next_level_technologies.entities.models.Employee;
 import com.example.next_level_technologies.entities.models.Project;
 import com.example.next_level_technologies.repositories.EmployeeRepository;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -38,13 +41,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Long create(EmployeeDto request) {
 
-        Employee exist = employeeRepository.findFirstByFirstNameAndLastNameAndAge(request.getFirstName(), request.getLastName(), request.getAge());
+        Employee exist = this.employeeRepository.findFirstByFirstNameAndLastNameAndAge(request.getFirstName(), request.getLastName(), request.getAge());
 
         if (exist != null) {
             return exist.getId();
         }
 
-        Employee employee = modelMapper.map(request, Employee.class);
+        Employee employee = this.modelMapper.map(request, Employee.class);
         Long projectId = this.projectService.create(request.getProject());
         Project project = this.projectService.find(projectId);
 
@@ -52,5 +55,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.employeeRepository.save(employee);
 
         return employee.getId();
+    }
+
+    @Override
+    public List<ExportedEmployeeDto> getEmployeesAfterAge25() {
+        return this.employeeRepository
+                .findAllByAgeAfter(25)
+                .stream()
+                .map(e -> this.modelMapper.map(e, ExportedEmployeeDto.class))
+                .collect(Collectors.toList());
     }
 }

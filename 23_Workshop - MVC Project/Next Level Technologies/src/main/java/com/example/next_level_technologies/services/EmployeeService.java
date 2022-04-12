@@ -1,8 +1,10 @@
 package com.example.next_level_technologies.services;
 
 import com.example.next_level_technologies.entities.dto.EmployeeDto;
+import com.example.next_level_technologies.entities.dto.ExportedEmployeeDto;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface EmployeeService {
 
@@ -14,4 +16,5 @@ public interface EmployeeService {
 
     Long create (EmployeeDto request);
 
+    List<ExportedEmployeeDto> getEmployeesAfterAge25();
 }
